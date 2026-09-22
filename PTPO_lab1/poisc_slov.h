@@ -1,12 +1,14 @@
 // poisc_slov.h
-// Здесь объявляю все функции для первого задания.
-// Разделил на .h и .cpp, как просил преподаватель.
+// Здесь объявляю все функции.
+// Этап 1: подсчёт слов + поиск конкретного слова.
+// Этап 2: добавил индексацию позиций слов.
 
 #ifndef POISC_SLOV_H
 #define POISC_SLOV_H
 
 #include <string>
 #include <map>
+#include <vector>
 
 using namespace std;
 
@@ -25,4 +27,15 @@ int findWord(string filename, string what);
 // Печатает, сколько раз встретилось искомое слово
 void printFindResult(string what, int count);
 
+// Запоминает, на каких позициях стоит каждое слово
+map<string, vector<int> > getWordPositions(string filename);
+
+// Печатает позиции слов в формате: слово – поз1, поз2, ...
+void printPositions(map<string, vector<int> > pozicii);
+
+// Ищет слово в файле и возвращает список его позиций
+vector<int> findWordPositions(string filename, string what);
+
+// Печатает позиции найденного слова
+void printFoundPositions(vector<int> nomera);
 #endif

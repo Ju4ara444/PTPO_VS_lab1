@@ -1,5 +1,7 @@
 ﻿// poisc_slov.cpp
 // Здесь пишу сами функции.
+// Этап 1: подсчёт слов + поиск конкретного слова.
+// Этап 2: добавил индексацию позиций слов.
 
 #include "poisc_slov.h"
 #include <fstream>
@@ -97,4 +99,98 @@ int findWord(string filename, string what) {
 // Печатаю результат поиска (если понадобится)
 void printFindResult(string what, int count) {
     cout << "Слово \"" << what << "\" встретилось " << count << " раз(а)" << endl;
+}
+
+// Запоминаю позиции слов
+// Позиция - это номер слова в файле (начинаю с нуля)
+map<string, vector<int> > getWordPositions(string filename) {
+    map<string, vector<int> > pozicii;
+
+    ifstream file(filename.c_str());
+    if (!file.is_open()) {
+        cout << "Не могу открыть файл: " << filename << endl;
+        return pozicii;
+    }
+
+    string slovo;
+    int nomer = 0;   // номер текущего слова, начинаю с нуля
+
+    while (file >> slovo) {
+        string clean = slova_bez_zap(slovo);
+        if (clean != "") {
+            // Добавляю номер этого слова в список позиций
+            pozicii[clean].push_back(nomer);
+        }
+        nomer = nomer + 1;   // следующее слово получит следующий номер
+    }
+
+    file.close();
+    return pozicii;
+}
+
+// Печатаю позиции слов
+void printPositions(map<string, vector<int> > pozicii) {
+    cout << "Позиции слов:" << endl;
+
+    // map сам сортирует по алфавиту, так что вывод будет аккуратный
+    for (map<string, vector<int> >::iterator it = pozicii.begin();
+        it != pozicii.end(); it++) {
+
+        cout << it->first << " – ";
+
+        vector<int> nomera = it->second;
+        for (int i = 0; i < nomera.size(); i++) {
+            cout << nomera[i];
+            // Запятую ставлю после всех, кроме последнего
+            if (i != nomera.size() - 1) {
+                cout << ", ";
+            }
+        }
+        cout << endl;
+    }
+}
+// Ищу слово в файле и запоминаю ВСЕ его позиции
+vector<int> findWordPositions(string filename, string what) {
+    vector<int> nomera;
+
+    string target = slova_bez_zap(what);
+    if (target == "") {
+        return nomera;   // пустой список - искать нечего
+    }
+
+    ifstream file(filename.c_str());
+    if (!file.is_open()) {
+        cout << "Не могу открыть файл: " << filename << endl;
+        return nomera;
+    }
+
+    string slovo;
+    int poziciya = 0;   // номер текущего слова, начинаю с нуля
+
+    while (file >> slovo) {
+        string clean = slova_bez_zap(slovo);
+        if (clean == target) {
+            nomera.push_back(poziciya);
+        }
+        poziciya = poziciya + 1;
+    }
+
+    file.close();
+    return nomera;
+}
+
+// Печатаю позиции найденного слова
+void printFoundPositions(vector<int> nomera) {
+    if (nomera.size() == 0) {
+        cout << "позиций нет";
+        return;
+    }
+
+    cout << "позиции: ";
+    for (int i = 0; i < nomera.size(); i++) {
+        cout << nomera[i];
+        if (i != nomera.size() - 1) {
+            cout << ", ";
+        }
+    }
 }
