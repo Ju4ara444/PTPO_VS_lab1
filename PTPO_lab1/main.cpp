@@ -175,6 +175,5 @@ int main() {
 
     cout << "Уникальные числа в диапазоне [" << low << ", " << high << "]: ";
     pechatVector(naidennye);
-
     return 0;   // Программа успешно завершилась.
 }
